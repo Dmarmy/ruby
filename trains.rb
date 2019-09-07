@@ -1,32 +1,19 @@
+# frozen_string_literal: true
 
 class Station
-  attr_reader :trains, :station_name
-  def initialize (station_name)
-    @station_name = station_name
-    @trains =[]
+  attr_reader :trains, :name
+
+  def initialize(name)
+    @name = name
+    @trains = []
   end
 
   def arrival(train)
     trains.push train
   end
 
-  def list
-    pas_train=0
-    fr_train=0
-      trains.each do |train|
-        if train.train_type =='Passenger'
-          pas_train+=1
-        else
-          fr_train +=1
-        end
-      end
-      puts "There are #{pas_train} Passenger trains and #{fr_train} Freight trains at #{station_name} Station at the moment"
-  end
-
-  def show_trains
-      print "There are "
-      trains.each { |train| print " #{train.train_number}; "}
-      print "at the #{station_name} station"
+  def trains_by_type(type)
+    trains.select { |train| train.type == type }
   end
 
   def depart(train)
@@ -35,86 +22,82 @@ class Station
   end
 end
 
-
 class Route
   attr_accessor :stations
 
-  def initialize (start_station, terminal_station)
-    @stations=[start_station, terminal_station]
+  def initialize(start_station, terminal_station)
+    @stations = [start_station, terminal_station]
   end
 
- def add_station(station)
-   self.stations.insert(-2, station)
- end
+  def add_station(station)
+    stations.insert(-2, station)
+  end
 
- def delete_station(station)
-   if[stations.first, stations.last].include?(station)
-     puts "Not a good idea"
-   else
-     self.stations.delete(station)
-   end
+  def delete_station(station)
+    unless [stations.first, stations.last].include?(station)
+      stations.delete(station)
+    end
   end
 end
 
-
 class Train
-  attr_accessor :speed, :number_of_wagons, :station, :route
-  attr_reader :train_number, :train_type
+  attr_reader :type, :speed, :number_of_wagons
 
-  def initialize (train_number, train_type, number_of_wagons, speed = 0)
+  def initialize(train_number, type, number_of_wagons)
     @train_number = train_number
-    @train_type = train_type
+    @type = type
     @number_of_wagons = number_of_wagons
-    @speed = speed
+    @speed = 0
   end
 
-  def speed_pickup(pickup)
-    self.speed += pickup
+  def speed_pickup(value)
+    self.speed += value
   end
 
-  def stop
-    self.speed = 0
-    puts "The train is stopped"
+  def speed_decrease(value)
+    self.speed -= value unless (speed - value).negative?
   end
 
   def hitching
-    if speed.zero?
-      self.number_of_wagons += 1
-    else puts "Stop the train first"
-    end
+    self.number_of_wagons += 1 if speed.zero?
   end
 
   def unhitching
-    if speed.zero? && number_of_wagons > 0
-      self.number_of_wagons -= 1
-    else puts "The train is moving or no wagons left"
-    end
+    self.number_of_wagons -= 1 if speed.zero? && number_of_wagons.positive?
   end
 
-  def get_route(route)
+  def accept_route(route)
     @route = route
+    @route.stations[0].arrival(self)
+    puts @station_index
+    @station_index = 0
   end
 
-
-  def  go(station)
-    if @station == station
-      puts "Already here"
-    elsif route.nil?
-      puts "No route"
-    elsif route.stations.include?(station)
-      @station.depart(self) if @station
-      @station = station
-      station.arrival(self)
-    else
-      puts "This station isn't on the route:("
+  def go_forward
+    unless @station_index >= @route.stations.size - 1
+      current_station.depart(self)
+      next_station.arrival(self)
+      @station_index += 1
     end
   end
 
-  def whats_near
-    puts "current station is #{station.station_name}"
-  puts "next station is #{route.stations[route.stations.index(station)+1].station_name}"
-   if route.stations.index(station) != route.stations.size-1
-      puts "previous station is #{route.stations[route.stations.index(station)-1].station_name}"
+  def go_back
+    unless @station_index < 1 && @route.nil?
+      current_station.depart(self)
+      previous_station.arrival(self)
+      @station_index -= 1
     end
+  end
+
+  def current_station
+    @route.stations[@station_index]
+  end
+
+  def next_station
+    @route.stations[@station_index + 1] if @station_index + 1 < @route.stations.size
+  end
+
+  def previous_station
+    @route.stations[@station_index - 1] if @station_index - 1 >= 0
   end
 end
