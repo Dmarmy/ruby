@@ -6,4 +6,7 @@ class PassengerTrain < Train
   def wagon_class
     PassengerWagon
   end
+  def to_s
+    "Passenger train № #{self.number}. "
+  end
 end

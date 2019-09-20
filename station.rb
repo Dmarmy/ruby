@@ -19,4 +19,8 @@ class Station
   def depart(train)
     trains.delete(train)
   end
+
+  def to_s
+    @name
+  end
 end

@@ -63,4 +63,50 @@ class Bank
   def minus_station(route_number, station_number)
     routes[route_number].delete_station(stations[station_number])
   end
-end
+
+  def train?(train_number)
+    trains.find { |t| t.number == train_number }
+  end
+
+  def wrong_train_type?(train_type)
+    train_types[train_type].nil?
+  end
+
+  def wrong_station?(station_number)
+    stations[station_number].nil?
+  end
+
+  def wrong_route?(route_number)
+    routes[route_number].nil?
+  end
+
+  def wrong_train?(train_number)
+    trains[train_number].nil?
+  end
+
+  def correct_station(station_number)
+    if stations[station_number].nil?
+      puts 'There is no such station'
+      false
+    else
+      true
+    end
+  end
+  def correct_route(route_number)
+    if routes[route_number].nil?
+      puts 'There is no such route'
+      false
+    else
+      true
+    end
+  end
+
+  def correct_train(train_number)
+    if trains[train_number].nil?
+      puts 'There is no such train'
+      false
+    else
+      true
+    end
+  end
+  end

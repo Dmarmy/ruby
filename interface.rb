@@ -64,41 +64,72 @@ class Interface
   def create_train
     puts 'Enter train number'
     train_number = gets.to_i
+    if bank.train?(train_number)
+      puts 'Already exists'
+      return
+    end
     puts 'Enter 0 for passenger train or 1 for cargo train'
     train_type = gets.to_i
+    if bank.wrong_train_type?(train_type)
+      puts 'Wrong train type'
+      return
+    end
     bank.create_train(train_number, train_type)
   end
 
   def create_route
+    if bank.stations.size < 2
+      puts 'Create more stations'
+      return
+    end
     first_station = choose_item(bank.stations, 'Choose first station: ')
+    return unless bank.correct_station(first_station)
+
     last_station = choose_item(bank.stations, 'Choose last station: ')
+    return unless bank.correct_station(last_station)
+
+    if first_station == last_station
+      puts'Stations should be different'
+      return
+    end
     bank.create_route(first_station, last_station)
   end
 
   def assign_route
-    train_number = choose_item(bank.trains, 'Choose trains: ')
+    train_number = choose_item(bank.trains, 'Choose train: ')
+    return unless bank.correct_train(train_number)
+
     route_number = choose_item(bank.routes, 'Choose route: ')
     bank.assign_route(train_number, route_number)
+    return unless bank.correct_route(route_number)
   end
 
   def add_wagons
-    train_number = choose_item(bank.trains, 'Choose trains: ')
+    train_number = choose_item(bank.trains, 'Choose train: ')
+    return unless bank.correct_train(train_number)
+
     bank.add_wagons(train_number)
   end
 
   def delete_wagons
-    train_number = choose_item(bank.trains, 'Choose trains: ')
+    train_number = choose_item(bank.trains, 'Choose train: ')
+    return unless bank.correct_train(train_number)
+
     wagon_number = choose_item(bank.trains[train_number].wagons, 'Choose wagon')
     bank.delete_wagons(train_number, wagon_number)
   end
 
   def move_forward
     train_number = choose_item(bank.trains, 'Choose train')
+    return unless bank.correct_train(train_number)
+
     bank.move_forward(train_number)
   end
 
   def move_back
     train_number = choose_item(bank.trains, 'Choose train')
+    return unless bank.correct_train(train_number)
+
     bank.move_back(train_number)
   end
 
@@ -108,6 +139,8 @@ class Interface
 
   def show_trains_at_station
     station_number = choose_item(bank.stations, 'Choose station')
+    return unless bank.correct_station(station_number)
+
     station = bank.stations[station_number]
     puts "Trains at  #{station.name}: "
     view_collection(station.trains)
@@ -115,13 +148,21 @@ class Interface
 
   def plus_station
     route_number = choose_item(bank.routes, 'Choose route')
+    return unless bank.correct_route(route_number)
+
     station_number = choose_item(bank.stations, 'Choose station')
+    return unless bank.correct_station(station_number)
+
     bank.plus_station(route_number, station_number)
   end
 
   def minus_station
     route_number = choose_item(bank.routes, 'Choose route')
+    return unless bank.correct_route(route_number)
+
     station_number = choose_item(bank.stations, 'Choose station')
+    return unless bank.correct_station(station_number)
+
     bank.minus_station(route_number, station_number)
   end
 

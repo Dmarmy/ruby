@@ -16,4 +16,8 @@ class Route
       stations.delete(station)
     end
   end
+
+  def to_s
+    "#{stations[0].name} -> #{stations[-1].name}"
+  end
 end

@@ -17,7 +17,7 @@ class Train
   end
 
   def hitching(wagon)
-    wagons.push wagon if speed.zero? && wagon.is_a?(wagon_type)
+    wagons.push wagon if speed.zero? && wagon.is_a?(wagon_class)
   end
 
   def unhitching(wagon)
@@ -58,5 +58,5 @@ class Train
     @route.stations[@station_index - 1] if @station_index - 1 >= 0
   end
 
-  def wagon_type; end
+  def wagon_class; end
 end
