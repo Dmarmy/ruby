@@ -17,7 +17,7 @@ class Train
   end
 
   def hitching(wagon)
-    wagons.push wagon if speed.zero? && wagon.is_a?(wagon_class)
+    wagons.push wagon if speed.zero? && able_to_hitch?(wagon)
   end
 
   def unhitching(wagon)

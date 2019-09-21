@@ -39,8 +39,12 @@ class Bank
 
   def add_wagons(train_number)
     train = trains[train_number]
-    wagon_class = train.wagon_class
-    train.hitching(wagon_class.new)
+    if  train.instance_of?(PassengerTrain)
+      wagon = PassengerWagon.new
+    else
+      wagon = CargoWagon.new
+    end
+    train.hitching(wagon)
   end
 
   def delete_wagons(train_number, wagon_number)
