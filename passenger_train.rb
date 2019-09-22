@@ -3,11 +3,17 @@
 require_relative 'passenger_wagon'
 require_relative 'train'
 class PassengerTrain < Train
-  def able_to_hitch?(wagon)
-    wagon.instance_of?(PassengerWagon)
+  def hitch(wagon)
+    super if able_to_hitch?(wagon)
   end
 
   def to_s
-    "Passenger train № #{self.number}. "
+    "Cargo train № #{number}. "
+  end
+
+  private
+
+  def able_to_hitch?(wagon)
+    wagon.instance_of?(PassengerWagon)
   end
 end

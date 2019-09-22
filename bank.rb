@@ -39,11 +39,11 @@ class Bank
 
   def add_wagons(train_number)
     train = trains[train_number]
-    if  train.instance_of?(PassengerTrain)
-      wagon = PassengerWagon.new
-    else
-      wagon = CargoWagon.new
-    end
+    wagon = if train.instance_of?(PassengerTrain)
+              PassengerWagon.new
+            else
+              CargoWagon.new
+            end
     train.hitching(wagon)
   end
 
@@ -96,6 +96,7 @@ class Bank
       true
     end
   end
+
   def correct_route(route_number)
     if routes[route_number].nil?
       puts 'There is no such route'

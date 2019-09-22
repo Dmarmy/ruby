@@ -89,7 +89,7 @@ class Interface
     return unless bank.correct_station(last_station)
 
     if first_station == last_station
-      puts'Stations should be different'
+      puts 'Stations should be different'
       return
     end
     bank.create_route(first_station, last_station)
