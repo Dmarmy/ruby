@@ -7,16 +7,17 @@ class Train
   include InstanceCounter
 
   attr_reader :speed, :number, :wagons, :speed, :route
-  @@instances = []
+  @@trains = {}
   def initialize(number)
     @number = number
     @speed = 0
     @wagons = []
+    @@trains[number] = self
     register_instance
   end
 
   def self.find(number)
-    @@instances[number]
+    @@trains[number]
   end
 
   def speed_pickup(value)
