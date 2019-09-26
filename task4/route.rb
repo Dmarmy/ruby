@@ -11,7 +11,7 @@ class Route
   def initialize(start_station, terminal_station)
     @stations = [start_station, terminal_station]
     register_instance
-    # validate!
+    validate!
   end
 
   def add_station(station)
@@ -27,5 +27,12 @@ class Route
   def to_s
     "#{stations[0].name} -> #{stations[-1].name}"
   end
-  # protected
+
+  protected
+
+  def validate!
+    raise 'First station is not an instance of Station class' unless stations.first.is_a?(Station)
+    raise 'Last station is not an instance of Station class' unless stations.last.is_a?(Station)
+    raise 'Stations should be different' if stations.first == stations.last
+  end
 end

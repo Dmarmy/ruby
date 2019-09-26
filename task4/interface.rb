@@ -84,12 +84,8 @@ class Interface
     raise 'Create more stations' if bank.stations.size < 2
 
     first_station = choose_item(bank.stations, 'Choose first station: ')
-    raise 'There is no such station' unless bank.correct_station(first_station)
 
     last_station = choose_item(bank.stations, 'Choose last station: ')
-    raise 'There is no such station' unless bank.correct_station(last_station)
-
-    raise 'Stations should be different' if first_station == last_station
 
     bank.create_route(first_station, last_station)
   rescue RuntimeError => e
